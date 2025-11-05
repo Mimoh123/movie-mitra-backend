@@ -16,7 +16,11 @@ export default class AuthService {
    const hashedPassword = Password.hash(data.password)
    const newUserData: UserInsert = { ...data, password: hashedPassword }
    const newUser = await UserRepo.createUser(newUserData)
-   return Array.isArray(newUser) ? newUser[0] : newUser
+   const { name, id, email } = newUser[0]
+
+   const refreshToken = JWTService.generateRefreshToken({ id: newUser[0].id, email: newUser[0].email })
+   const userWithAccessToken = await UserRepo.updateUser(newUser[0].id, { refresh_token: refreshToken })
+   return { name, id, email }
   }
   catch (err) {
    if (err instanceof Error) throw err

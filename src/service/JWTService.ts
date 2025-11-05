@@ -30,7 +30,33 @@ export default class JWTService {
   });
  }
 
- public static verifyToken<T extends object>(token: string): T {
-  return jwt.verify(token, JWT_SECRET) as T;
+ public static verifyToken(token: string): JWTPayload {
+  return jwt.verify(token, JWT_SECRET) as JWTPayload;
+ }
+
+ public static getTokenExpirationTime(token: string): number | null {
+  try {
+   const decoded = jwt.decode(token) as any;
+   return decoded?.exp ? decoded.exp * 1000 : null;
+  } catch (error) {
+   return null;
+  }
+ }
+
+ public static isTokenExpiredMoreThanDays(token: string, days: number): boolean {
+  const expirationTime = this.getTokenExpirationTime(token);
+  if (!expirationTime) return true;
+
+  const daysSinceExpiration = (Date.now() - expirationTime) / (1000 * 60 * 60 * 24);
+  return daysSinceExpiration > days;
+ }
+
+
+ public static getPayloadFromExpiredToken(token: string) {
+  try {
+   return jwt.decode(token) as JWTPayload;
+  } catch (error) {
+   throw new Error("Invalid token format");
+  }
  }
 }
