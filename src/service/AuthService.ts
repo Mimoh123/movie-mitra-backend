@@ -29,9 +29,7 @@ export default class AuthService {
  }
  public static async login(email: string, passcode: string) {
   try {
-   if (email || passcode) {
-    throw new Error("Email and password are required")
-   }
+
    const existingUser = await UserRepo.getUserByEmail(email)
 
    if (!existingUser) {

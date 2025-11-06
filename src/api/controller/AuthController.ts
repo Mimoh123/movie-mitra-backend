@@ -15,7 +15,11 @@ export default class AuthController {
    const user = await AuthService.register(userData);
    ResponseHandler.success(res, "User registered successfully", user, 201);
   }
-  catch (error) {
+  catch (error: unknown) {
+   if (error instanceof Error) {
+    ResponseHandler.error(res, error, 500);
+    return;
+   }
    ResponseHandler.error(res, new Error("Failed to register user"), 500);
   }
  }
@@ -31,6 +35,10 @@ export default class AuthController {
    ResponseHandler.success(res, "Login successful", { token: token }, 200);
   }
   catch (error) {
+   if (error instanceof Error) {
+    ResponseHandler.error(res, error, 500);
+    return;
+   }
    ResponseHandler.error(res, new Error("Failed to login user"), 500);
   }
  }

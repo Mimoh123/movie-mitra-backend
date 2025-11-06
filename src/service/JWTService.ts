@@ -6,10 +6,8 @@ export interface JWTPayload {
 }
 
 const JWT_SECRET: Secret =
- process.env.JWT_SECRET ??
- (() => {
-  throw new Error("JWT_SECRET is not defined in environment variables");
- })();
+ process.env.JWT_SECRET ?? "secret";
+
 
 const REFRESH_TOKEN_EXPIRE: SignOptions["expiresIn"] =
  (process.env.REFRESH_TOKEN_EXPIRE as SignOptions["expiresIn"]) ?? "7d";
