@@ -16,17 +16,22 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
  try {
 
   const decoded = JWTService.verifyToken(token);
+
   if (!decoded.id) {
    ResponseHandler.error(res, new Error("Unauthorized"), 401);
+   return;
   }
   const user = await UserRepo.getUserById(decoded.id)
-  if (!user) {
+  if (user.length === 0) {
    ResponseHandler.error(res, new Error("Unauthorized user"), 401);
    return;
   }
-  req.body.userId = decoded.id
+  req.body = req.body || {};
+  req.body.userId = user[0].id
+  res.setHeader("Authorization", `Bearer ${token}`);
   next();
  } catch (error) {
+
 
   try {
    if (JWTService.isTokenExpiredMoreThanDays(token, 3)) {
@@ -59,6 +64,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
    }
 
    const newAccessToken = JWTService.generateAccessToken({ id: decodedRefreshToken.id, email: decodedRefreshToken.email })
+   req.body = req.body || {};
    req.body.userId = decodedRefreshToken.id
    res.setHeader("Authorization", `Bearer ${newAccessToken}`);
    next();

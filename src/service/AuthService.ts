@@ -19,6 +19,7 @@ export default class AuthService {
    const { name, id, email } = newUser[0]
 
    const refreshToken = JWTService.generateRefreshToken({ id: newUser[0].id, email: newUser[0].email })
+   console.log("this is the refresh token", refreshToken);
    const userWithAccessToken = await UserRepo.updateUser(newUser[0].id, { refresh_token: refreshToken })
    return { name, id, email }
   }
