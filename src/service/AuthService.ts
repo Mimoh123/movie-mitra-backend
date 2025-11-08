@@ -113,7 +113,7 @@ export default class AuthService {
 
  public static async changePassword(userId: string, currentPassword: string, newPassword: string) {
   try {
-   // Get user by ID
+
    const users = await UserRepo.getUserById(userId)
    const user = users[0]
 
@@ -121,20 +121,20 @@ export default class AuthService {
     throw new Error("User not found")
    }
 
-   // Verify current password
+
    if (!Password.comparePassword(currentPassword, user.password)) {
     throw new Error("Current password is incorrect")
    }
 
-   // Validate new password length
+
    if (newPassword.length < 6) {
     throw new Error("New password must be at least 6 characters long")
    }
 
-   // Hash new password
+
    const hashedPassword = Password.hash(newPassword)
 
-   // Update password
+
    await UserRepo.updateUser(userId, {
     password: hashedPassword,
    })

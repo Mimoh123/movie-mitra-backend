@@ -11,18 +11,18 @@ export default class EmailService {
       );
     }
 
-    // Remove any spaces from the app password (Gmail app passwords can have spaces)
+
     const cleanedPass = smtpPass.replace(/\s/g, '');
     const cleanedUser = smtpUser.trim();
 
-    // Debug: Log that credentials are being used (but don't log the actual password)
+
     console.log(`[EmailService] Using SMTP user: ${cleanedUser}`);
     console.log(`[EmailService] App password length: ${cleanedPass.length} characters`);
 
     return nodemailer.createTransport({
       host: process.env.SMTP_HOST || "smtp.gmail.com",
       port: parseInt(process.env.SMTP_PORT || "587"),
-      secure: process.env.SMTP_SECURE === "true", // true for 465, false for other ports
+      secure: process.env.SMTP_SECURE === "true",
       auth: {
         user: cleanedUser,
         pass: cleanedPass,
