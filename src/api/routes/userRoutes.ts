@@ -5,9 +5,14 @@ import { authenticate } from "../../middleware/authenticate";
 import UserController from "../controller/UserController";
 
 
+
 const router = Router()
 router.post("/register", AuthController.register)
 router.post("/login", AuthController.login)
+router.post("/forgot-password", AuthController.forgotPassword)
+router.post("/reset-password", AuthController.resetPassword)
+router.post("/change-password", authenticate, AuthController.changePassword)
+router.get("/test-email", AuthController.testEmailConnection)
 
 router.post("/watchlist", authenticate, WatchListController.createWatchList)
 router.get("/watchlist", authenticate, WatchListController.getWatchLists)
@@ -18,6 +23,6 @@ router.delete("/watchlist/:id", authenticate, WatchListController.deleteWatchLis
 
 router.get("/user", authenticate, UserController.getUserById)
 router.get("/user/email", authenticate, UserController.getUserByEmail)
-router.put("/user/:id", authenticate, UserController.updateUser)
-router.delete("/user/:id", authenticate, UserController.deleteUser)
+router.put("/user", authenticate, UserController.updateUser)
+// router.delete("/user/:id", authenticate, UserController.deleteUser)
 export default router

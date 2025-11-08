@@ -1,4 +1,4 @@
-import { date, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+import { date, pgTable, uuid, varchar, timestamp } from "drizzle-orm/pg-core";
 
 
 export const userTable = pgTable("users", {
@@ -7,6 +7,8 @@ export const userTable = pgTable("users", {
  email: varchar({ length: 255 }).notNull().unique(),
  password: varchar({ length: 255 }).notNull(),
  refresh_token: varchar({ length: 1024 }),
+ reset_token: varchar({ length: 255 }),
+ reset_token_expiry: timestamp("reset_token_expiry"),
  created_at: date("created_at").defaultNow(),
  updated_at: date("updated_at").defaultNow(),
 })

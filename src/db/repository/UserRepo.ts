@@ -17,6 +17,10 @@ export default class UserRepo {
   const user = await db.select().from(userTable).where(eq(userTable.email, email)).execute()
   return Array.isArray(user) ? user[0] : user
  }
+ public static async getUserByResetToken(resetToken: string) {
+  const user = await db.select().from(userTable).where(eq(userTable.reset_token, resetToken)).execute()
+  return Array.isArray(user) ? user[0] : user
+ }
  public static async updateUser(id: string, data: Partial<User>) {
   return db.update(userTable).set(data).where(eq(userTable.id, id)).returning().execute()
  }
